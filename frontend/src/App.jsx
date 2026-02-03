@@ -17,9 +17,12 @@ function App() {
     notes: "",
   });
 
+  // ✅ Backend Base URL
+  const API_URL = "https://mini-crm-backend-fpde.onrender.com/api/leads";
+
   // Fetch Leads
   const fetchLeads = async () => {
-    const res = await axios.get("http://localhost:5000/api/leads");
+    const res = await axios.get(API_URL);
     setLeads(res.data);
   };
 
@@ -36,7 +39,7 @@ function App() {
   const addLead = async (e) => {
     e.preventDefault();
 
-    await axios.post("http://localhost:5000/api/leads", formData);
+    await axios.post(API_URL, formData);
 
     setFormData({ name: "", email: "", phone: "", notes: "" });
     fetchLeads();
@@ -44,7 +47,7 @@ function App() {
 
   // Delete Lead
   const deleteLead = async (id) => {
-    await axios.delete(`http://localhost:5000/api/leads/${id}`);
+    await axios.delete(`${API_URL}/${id}`);
     fetchLeads();
   };
 
@@ -78,11 +81,13 @@ function App() {
             }}
           >
             <input type="text" name="username" placeholder="Admin Username" />
+
             <input
               type="password"
               name="password"
               placeholder="Admin Password"
             />
+
             <button type="submit">Login</button>
           </form>
 
@@ -187,13 +192,11 @@ function App() {
                   <select
                     value={lead.status}
                     onChange={async (e) => {
-                      await axios.put(
-                        `http://localhost:5000/api/leads/${lead._id}`,
-                        {
-                          status: e.target.value,
-                          notes: lead.notes,
-                        },
-                      );
+                      await axios.put(`${API_URL}/${lead._id}`, {
+                        status: e.target.value,
+                        notes: lead.notes,
+                      });
+
                       fetchLeads();
                     }}
                   >
